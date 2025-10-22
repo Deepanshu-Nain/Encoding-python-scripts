@@ -7,37 +7,34 @@ data = {
 df = pd.DataFrame(data)
 print(df)
 
-print("\nChoose Imputation Method:")
+print("Imputation Methods:")
 print("1. Simple Imputation ")
 print("2. Imputation with Extension ")
-choice = int(input( "1 or 2: "))
 
-df_imputed = df.copy()
+choice = int(input("pick any imputation method you want to use : "))
 
-for col in df.columns:
-    if df[col].dtype in [np.float64, np.int64]:
-        missing_val = df[col].isna()
-        non_missing_val = df[col].notna()     
+if choice == 1:   # simple imputation
 
-        mean_val = np.sum(non_missing_val) / len(non_missing_val)
+    mean_val_col1 = df['Age'].mean()
+    mean_val_col2 = df['Salary'].mean()
 
-        for i in range(len(df[col])):          # here we replace nan values with mean
-            if pd.isna(df[col][i]):
-                df_imputed.loc[i, col] = mean_val
+    df['Age'] = df['Age'].fillna(mean_val_col1)
+    df['Salary'] = df['Salary'].fillna(mean_val_col2)
 
-        if choice == 2:
-            df_imputed[col + "_was_missing"] = missing_val
+    print(df)
 
-    else:          # categorical data
-        non_missing = [x for x in df[col] if pd.notna(x)]
-        mode_val = max(non_missing, key=non_missing.count) if non_missing else "Unknown"
-        missing_val = df[col].isna()
+elif choice == 2:   # imputation with extension
 
-        for i in range(len(df[col])):
-            if pd.isna(df[col][i]):
-                df_imputed.loc[i, col] = mode_val
+    df['Age_was_missing'] = df['Age'].isna()
+    df['Salary_was_missing'] = df['Salary'].isna()
 
-        if choice == 2:
-            df_imputed[col + "_was_missing"] = missing_val
+    mean_val_col1 = df['Age'].mean()
+    mean_val_col2 = df['Salary'].mean()
 
-print(df_imputed)
+    df['Age'] = df['Age'].fillna(mean_val_col1)
+    df['Salary'] = df['Salary'].fillna(mean_val_col2)
+
+    print(df)
+
+else :
+    print("Invalid Input")
